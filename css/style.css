@@ -1,0 +1,12 @@
+body {
+    font-family: 'Pretendard', 'Segoe UI', sans-serif;
+}
+
+#roulette {
+    width: 500px;
+    height: 500px;
+}
+
+li {
+    padding: 10px;
+}
