@@ -18,7 +18,7 @@ const rouletteColors = [
     [209, 36, 36], [237, 160, 36], [255, 225, 16], [77, 227, 23],
     [23, 227, 203], [23, 115, 227], [108, 23, 227], [227, 23, 138]];
 
-function addColorNoise(color) {
+function parseColor(color) {
     let r = color[0];
     let g = color[1];
     let b = color[2];
@@ -26,9 +26,7 @@ function addColorNoise(color) {
 }
 
 function getNewColor() {
-    // let result = addColorNoise(rouletteColors[rouletteInfo.length % rouletteColors.length]);
-    let result = addColorNoise(rouletteColors[rouletteInfo.length % rouletteColors.length]);
-    console.log(result);
+    let result = parseColor(rouletteColors[rouletteInfo.length % rouletteColors.length]);
     return result;
 }
 
