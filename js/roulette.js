@@ -176,6 +176,11 @@ function render() {
 
     ctx.fillStyle = "black";
     ctx.fillText(selected, halfWidth, 30*dpr);
+
+    // --- draw torque gauge
+    let gaugeLength = (Math.log(torque) - Math.log(2e-4)) * 10 * dpr;
+    ctx.fillStyle = "red";
+    ctx.fillRect(WIDTH * dpr - dpr*50, HEIGHT * dpr - gaugeLength - 50*dpr, dpr * 10, gaugeLength);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
