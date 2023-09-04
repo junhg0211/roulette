@@ -14,11 +14,22 @@ let weightSum;
 let rouletteInfo = [
 ];
 
-function randomColor() {
-    let r = Math.floor(Math.random() * 0xe0) + 0x10;
-    let g = Math.floor(Math.random() * 0xe0) + 0x10;
-    let b = Math.floor(Math.random() * 0xe0) + 0x10;
+const rouletteColors = [
+    [209, 36, 36], [237, 160, 36], [255, 225, 16], [77, 227, 23],
+    [23, 227, 203], [23, 115, 227], [108, 23, 227], [227, 23, 138]];
+
+function addColorNoise(color) {
+    let r = color[0];
+    let g = color[1];
+    let b = color[2];
     return `#${r.toString(16)}${g.toString(16)}${b.toString(16)}`;
+}
+
+function getNewColor() {
+    // let result = addColorNoise(rouletteColors[rouletteInfo.length % rouletteColors.length]);
+    let result = addColorNoise(rouletteColors[rouletteInfo.length % rouletteColors.length]);
+    console.log(result);
+    return result;
 }
 
 function addElement() {
@@ -41,7 +52,7 @@ function addElement() {
 
     let colorField = document.createElement("input");
     colorField.type = "color";
-    colorField.value = randomColor();
+    colorField.value = getNewColor();
     colorField.classList = ["form-control"];
     colorField.style.display = "none";
     li.appendChild(colorField);
