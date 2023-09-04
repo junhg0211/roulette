@@ -11,8 +11,9 @@ let dpr;
 let selected;
 let weightSum;
 
-let rouletteInfo = [
-];
+let rouletteInfo = [];
+
+let particles = [];
 
 const rouletteColors = [
     [209, 36, 36], [237, 160, 36], [255, 225, 16], [77, 227, 23],
@@ -83,11 +84,24 @@ function rotate(dt) {
     first = true;
 }
 
-const particles = [];
+function addParticle() {
+    let direction = Math.random() * Math.PI * 2;
+    let force = Math.random() * 3.5;
+    let dx = Math.cos(direction) * force;
+    let dy = Math.sin(direction) * force - 5;
+
+    particles.push([WIDTH/2, 60, dx, dy, parseColor(rouletteColors[Math.floor(Math.random() * rouletteColors.length)])]);
+}
+
+function endSpin() {
+    torque = 0;
+    result.innerText = selected;
+}
 
 let rotated = 0;
 let friction = 0.99;
 let torque = 0;
+let previousTorque = torque;
 let previous = true;
 
 let mouseX;
@@ -109,13 +123,16 @@ function tick() {
     previousClicked = mouseClicked;
 
     // --- spinning things
+    previousTorque = torque;
     torque *= friction;
 
-    let condition = torque < 2e-4;
+    let condition = Math.abs(torque) < 2e-4;
 
-    if (condition && !previous) {
-        torque = 0;
-        result.innerText = selected;
+    if (condition && !previous && !mouseClicked) {
+        endSpin();
+        for (let i = 0; i < 50; i++) {
+            addParticle();
+        }
     } else if (!condition && previous) {
         result.innerText = "(돌아가는 중...)";
     }
@@ -139,6 +156,20 @@ function tick() {
         if (remains < 0) {
             selected = info[0];
             break;
+        }
+    }
+
+    // --- particles
+    for (let i = 0; i < particles.length; i++) {
+        let particle = particles[i];
+
+        particle[3] += 0.2;
+        particle[0] += particle[2];
+        particle[1] += particle[3]
+
+        if (particle[1] > HEIGHT) {
+            particles.splice(i, 1);
+            i--;
         }
     }
 }
@@ -200,6 +231,14 @@ function render() {
         ctx.fillStyle = "red";
         ctx.fillRect(WIDTH * dpr - dpr*50, HEIGHT * dpr - gaugeLength - 50*dpr, dpr * 10, gaugeLength);
     }
+
+    // --- particles
+    for (let i = 0; i < particles.length; i++) {
+        let particle = particles[i];
+
+        ctx.fillStyle = particle[4];
+        ctx.fillRect(particle[0] * dpr, particle[1] * dpr, 10, 10);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -235,6 +274,9 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('mouseup', e => {
         if (e.button === 0) {
             mouseClicked = false;
+
+            if (torque === 0)
+                endSpin();
         }
     });
 });
