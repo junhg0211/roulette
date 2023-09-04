@@ -89,7 +89,26 @@ let rotated = 0;
 let friction = 0.99;
 let torque = 0;
 let previous = true;
+
+let mouseX;
+let mouseY;
+let mouseClicked = false;
+let previousClicked = mouseClicked;
+let previousAngle;
+
 function tick() {
+    // --- mouse torque control
+    let angle = Math.atan2(mouseY - HEIGHT/2, mouseX - WIDTH/2);
+
+    angleDelta = angle - previousAngle;
+    if (mouseClicked) {
+        torque = angleDelta;
+    }
+
+    previousAngle = angle;
+    previousClicked = mouseClicked;
+
+    // --- spinning things
     torque *= friction;
 
     let condition = torque < 2e-4;
@@ -176,9 +195,11 @@ function render() {
     ctx.fillText(selected, halfWidth, 30*dpr);
 
     // --- draw torque gauge
-    let gaugeLength = (Math.log(torque) - Math.log(2e-4)) * 10 * dpr;
-    ctx.fillStyle = "red";
-    ctx.fillRect(WIDTH * dpr - dpr*50, HEIGHT * dpr - gaugeLength - 50*dpr, dpr * 10, gaugeLength);
+    if (!mouseClicked) {
+        let gaugeLength = (Math.log(Math.abs(torque)) - Math.log(2e-4)) * 10 * dpr;
+        ctx.fillStyle = "red";
+        ctx.fillRect(WIDTH * dpr - dpr*50, HEIGHT * dpr - gaugeLength - 50*dpr, dpr * 10, gaugeLength);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -199,6 +220,23 @@ document.addEventListener('DOMContentLoaded', () => {
     infoList.addEventListener('keyup', updateInfo);
     infoList.addEventListener('keydown', updateInfo);
     infoList.addEventListener('change', updateInfo);
+
+    roulette.addEventListener('mousemove', e => {
+        mouseX = e.offsetX;
+        mouseY = e.offsetY;
+    });
+
+    window.addEventListener('mousedown', e => {
+        if (e.button === 0 && Math.hypot(WIDTH/2 - mouseX, HEIGHT/2 - mouseY) <= RADIUS) {
+            mouseClicked = true;
+        }
+    });
+
+    window.addEventListener('mouseup', e => {
+        if (e.button === 0) {
+            mouseClicked = false;
+        }
+    });
 });
 
 function resize() {
