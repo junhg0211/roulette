@@ -134,7 +134,7 @@ function render() {
 
     // --- draw roulette
     let been = 0;
-    ctx.font = "30px Pretendard";
+    ctx.font = `${dpr}rem Pretendard`;
     ctx.lineWidth = 5;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
