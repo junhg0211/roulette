@@ -31,6 +31,7 @@ function getNewColor() {
     return result;
 }
 
+let infoId = 1;
 function addElement() {
     let li = document.createElement("li");
 
@@ -38,8 +39,9 @@ function addElement() {
     contentField.type = "text";
     contentField.placeholder = "내용";
     contentField.classList = ["form-control"];
-    contentField.value = "와!";
+    contentField.value = `항목 ${infoId}`;
     li.appendChild(contentField);
+    infoId++;
 
     let weightField = document.createElement("input");
     weightField.type = "number";
