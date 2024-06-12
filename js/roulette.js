@@ -210,6 +210,7 @@ function render() {
         let ta = (startAngle + endAngle) / 2;
         let tx = halfWidth + Math.cos(ta) * RADIUS*dpr * 0.8;
         let ty = halfHeight + Math.sin(ta) * RADIUS*dpr * 0.8;
+        ctx.textStyle = "Pretendard JP";
         ctx.fillStyle = "black";
         ctx.strokeStyle = "white";
         ctx.strokeText(info[0], tx, ty);
